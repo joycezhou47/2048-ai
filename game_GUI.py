@@ -1,20 +1,29 @@
 import tkinter as tk
+from tkinter import filedialog
 from controller import GameController
+import os
 
 class GUI_2048():
 	def __init__(self, controller):
-		self.init_setup()
+		self.create_widgets()
 		self.setController(controller)
 
 	def __init__(self):
-		self.init_setup()
+		self.create_widgets()
 		self.setController(GameController())
 		
 
-	def init_setup(self):
+	def create_widgets(self):
 		self.game_window = tk.Tk(screenName="2048")
+		self.save_button = tk.Button(self.game_window, text="SAVE GAME",
+									command = self.save_game)
+		self.save_button.pack()
+		self.load_button = tk.Button(self.game_window, text="LOAD GAME",
+									command = self.load_game)
+		self.load_button.pack()
 		self.game_board_area = GameBoardArea(self.game_window)
 		self.game_board_area.pack()
+		
 		self.bind_keys()
 
 
@@ -45,17 +54,23 @@ class GUI_2048():
 		self.game_window.bind("<Up>", upKey)
 		self.game_window.bind("<Down>", downKey)
 
+	def save_game(self):
+		filename = filedialog.asksaveasfilename(initialdir=os.getcwd()+"/game_saves")
+		self.controller.saveGame(filename)
+
+	def load_game(self):
+		filename = filedialog.askopenfilename(initialdir=os.getcwd()+"/game_saves")
+		self.controller.loadGame(filename)
+		self.updateGameState()
 
 	#The functions talking to game controller
-
-	def updateGameState(self, new_game_board):
-		#TODO Only responsible for changing the game state area
-		self.game_board_area.updateGameBoard(new_game_board)
+	def updateGameState(self):
+		self.game_board_area.updateGameBoard(self.controller.getCurrentGame().getGameBoard())
 	
 	def playGameStep(self, direction):
 		if self.controller.playGameStep(direction):
 			#Valid move
-			self.updateGameState(self.controller.getCurrentGame().getGameBoard())
+			self.updateGameState()
 
 
 

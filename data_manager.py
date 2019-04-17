@@ -16,7 +16,7 @@ class AIDataManager():
 		self.load_data()
 
 	def load_data(self):
-		with f = np.load(self.file_full_path):
+		with np.load(self.file_full_path) as f:
 			self.X = f["X"]
 			self.y = f["y"]
 
