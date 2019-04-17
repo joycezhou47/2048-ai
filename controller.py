@@ -12,6 +12,9 @@ class GameController():
 		self.dm_AI = None
 		self.dm_game = GameDataManager()
 
+	def startNewGame(self):
+		self.game = GameState()
+
 
 	def playGameStep(self, direction):
 		if direction in self.game.available_moves():

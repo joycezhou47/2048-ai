@@ -15,6 +15,9 @@ class GUI_2048():
 
 	def create_widgets(self):
 		self.game_window = tk.Tk(screenName="2048")
+		self.new_game_button = tk.Button(self.game_window, text="NEW GAME",
+									command = self.create_new_game)
+		self.new_game_button.pack()
 		self.save_button = tk.Button(self.game_window, text="SAVE GAME",
 									command = self.save_game)
 		self.save_button.pack()
@@ -26,15 +29,6 @@ class GUI_2048():
 		
 		self.bind_keys()
 
-
-	def startMainLoop(self):
-		self.game_window.mainloop()
-
-	def setController(self, controller):
-		self.controller = controller
-		self.game_board_area.updateGameBoard(self.controller.getCurrentGame().getGameBoard())
-
-	#The functions talking to game window
 	def bind_keys(self):
 		def leftKey(event):
 			self.playGameStep("L")
@@ -53,6 +47,18 @@ class GUI_2048():
 		self.game_window.bind("<Right>", rightKey)
 		self.game_window.bind("<Up>", upKey)
 		self.game_window.bind("<Down>", downKey)
+
+	def startMainLoop(self):
+		self.game_window.mainloop()
+
+	def setController(self, controller):
+		self.controller = controller
+		self.game_board_area.updateGameBoard(self.controller.getCurrentGame().getGameBoard())
+
+	#The functions talking to game window
+	def create_new_game(self):
+		self.controller.startNewGame()
+		self.updateGameState()
 
 	def save_game(self):
 		filename = filedialog.asksaveasfilename(initialdir=os.getcwd()+"/game_saves")
