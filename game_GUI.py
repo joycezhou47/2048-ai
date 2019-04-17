@@ -25,11 +25,9 @@ class GUI_2048():
 		load_button = tk.Button(self.game_window, text="LOAD GAME", command = self.load_game)
 		load_button.pack()
 
-		AI_start_button = tk.Button(self.game_window, text="AI PLAY", command = self.start_AI)
-		AI_start_button.pack()
-
-		AI_stop_button = tk.Button(self.game_window, text="AI STOP", command=self.stop_AI)
-		AI_stop_button.pack()
+		self.AI_panel = AIPanel(self.game_window)
+		self.AI_panel.setCommand("start_AI", self.start_AI)
+		self.AI_panel.setCommand("stop_AI", self.stop_AI)
 
 		#variable = tk.StringVar()
 		#variable.set("one") # default value
@@ -53,11 +51,16 @@ class GUI_2048():
 		def downKey(event):
 			self.playGameStep("D")
 
+		def onWindowClose():
+			self.controller.endGame()
+			self.game_window.destroy()
+
 		self.game_window.focus_set()
 		self.game_window.bind("<Left>", leftKey)
 		self.game_window.bind("<Right>", rightKey)
 		self.game_window.bind("<Up>", upKey)
 		self.game_window.bind("<Down>", downKey)
+		self.game_window.protocol("WM_DELETE_WINDOW", onWindowClose)
 
 	def startMainLoop(self):
 		self.game_window.mainloop()
@@ -107,7 +110,22 @@ class GUI_2048():
 		self.game_window.after(500, self.move_AI)
 
 
+class AIPanel(tk.Canvas):
+	def __init__(self, master=None):
+		super().__init__(master)
+		self.pack()
+		self.create_widgets()
 
+	def create_widgets(self):
+
+		AI_start_button = tk.Button(self, name="start_AI", text="AI PLAY")
+		AI_start_button.pack()
+
+		AI_stop_button = tk.Button(self, name="stop_AI", text="AI STOP")
+		AI_stop_button.pack()
+
+	def setCommand(self, method_name, method):
+		self.children[method_name].configure(command=method)
 
 class GameBoardArea(tk.Canvas):
 	def __init__(self, master=None):

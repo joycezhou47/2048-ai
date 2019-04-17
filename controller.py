@@ -8,16 +8,17 @@ class GameController():
 		self.AI = PLAYER2048.getPlayer("Randmie", game_size=self.game.game_size)
 		self.dm_game = GameDataManager()
 		self.AImoving = False
+		self.cur_game_path = None
 
 	def __init__(self):
 		self.game = GameState()
 		self.AI = PLAYER2048.getPlayer("Randmie", game_size=self.game.game_size)
 		self.dm_game = GameDataManager()
 		self.AImoving = False
+		self.cur_game_path = None
 
 	def startNewGame(self):
 		self.game = GameState()
-
 
 	def playGameStep(self, direction):
 		if direction in self.game.available_moves():
@@ -29,11 +30,18 @@ class GameController():
 		return self.game
 
 	def saveGame(self, path):
+		self.cur_game_path = path
 		self.dm_game.save_game(path, self.game)
 
 	def loadGame(self, path):
+		self.cur_game_path = path
 		game_board = self.dm_game.load_game(path)
 		self.game = GameState(board=game_board)
+
+	def endGame(self):
+		if self.cur_game_path:
+			self.save_game(self, self.cur_game_path)
+		self.AI.endTraining()
 
 	def getAIMove(self):
 		return self.AI.respond(self.game)

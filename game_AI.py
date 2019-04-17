@@ -15,8 +15,11 @@ class PLAYER2048():
 	def respond(self, cur_board):
 		pass
 
+	def endTraining(self):
+		return
 
-class AI2048():
+
+class AI2048(PLAYER2048):
 	def __init__(self, AI_name, game_size=4):
 		self.AI_name = AI_name
 		self.DM = AIDataManager(AI_name, game_size)
@@ -24,7 +27,10 @@ class AI2048():
 	def respond(self, cur_game_state):
 		pass
 
-class Random2048():
+	def endTraining(self):
+		self.DM.end_session()
+
+class Random2048(PLAYER2048):
 	def respond(self, cur_game_state):
 		return np.random.choice(list(cur_game_state.available_moves()))
 

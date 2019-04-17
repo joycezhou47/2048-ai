@@ -12,8 +12,8 @@ class AIDataManager():
 		self.X = np.array([])
 		self.y = np.array([])
 		if not os.path.exists(self.file_full_path):
-			self.save_data()#Create an empty record
-		self.load_data()
+			self.save_data() #Create an empty record
+		#self.load_data()
 
 	def load_data(self):
 		with np.load(self.file_full_path) as f:
