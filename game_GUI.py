@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from controller import GameController
 import os
+import time
 
 class GUI_2048():
 	def __init__(self, controller):
@@ -15,15 +16,25 @@ class GUI_2048():
 
 	def create_widgets(self):
 		self.game_window = tk.Tk(screenName="2048")
-		self.new_game_button = tk.Button(self.game_window, text="NEW GAME",
-									command = self.create_new_game)
-		self.new_game_button.pack()
-		self.save_button = tk.Button(self.game_window, text="SAVE GAME",
-									command = self.save_game)
-		self.save_button.pack()
-		self.load_button = tk.Button(self.game_window, text="LOAD GAME",
-									command = self.load_game)
-		self.load_button.pack()
+		new_game_button = tk.Button(self.game_window, text="NEW GAME",command = self.create_new_game)
+		new_game_button.pack()
+
+		save_button = tk.Button(self.game_window, text="SAVE GAME",command = self.save_game)
+		save_button.pack()
+
+		load_button = tk.Button(self.game_window, text="LOAD GAME", command = self.load_game)
+		load_button.pack()
+
+		AI_start_button = tk.Button(self.game_window, text="AI PLAY", command = self.start_AI)
+		AI_start_button.pack()
+
+		AI_stop_button = tk.Button(self.game_window, text="AI STOP", command=self.stop_AI)
+		AI_stop_button.pack()
+
+		#variable = tk.StringVar()
+		#variable.set("one") # default value
+		#w = tk.OptionMenu(self.game_window, variable, "one", "two", "three")
+		#w.pack()
 		self.game_board_area = GameBoardArea(self.game_window)
 		self.game_board_area.pack()
 		
@@ -77,6 +88,23 @@ class GUI_2048():
 		if self.controller.playGameStep(direction):
 			#Valid move
 			self.updateGameState()
+
+	def load_AI(self, AI_name):
+		#TODO
+		pass
+
+	def start_AI(self):
+		self.controller.setAIMoving(True)
+		self.move_AI()
+
+	def stop_AI(self):
+		self.controller.setAIMoving(False)
+
+	def move_AI(self):
+		if not self.controller.isAIMoving():
+			return
+		self.playGameStep(self.controller.getAIMove())
+		self.game_window.after(500, self.move_AI)
 
 
 

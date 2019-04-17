@@ -5,7 +5,7 @@ AI_PATH = "AI_datas"
 GAME_PATH = "game_saves"
 
 class AIDataManager():
-	def __init__(self, game_size=4,  AI_name="default"):
+	def __init__(self, AI_name="default",  game_size=4):
 		self.AI_name = AI_name
 		self.file_name = AI_name + "." + str(game_size) + ".npz"
 		self.file_full_path = AI_PATH + "/" + self.file_name
