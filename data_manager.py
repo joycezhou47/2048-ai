@@ -32,7 +32,8 @@ class AIDataManager():
 
 class GameDataManager():
 	def load_game(self, path):
-		return np.load(path)['game_state']
+		with np.load(path) as f:
+			return f['game_state'], f['score']
 
 	def save_game(self, path, game):
-		np.savez(path, game_state=game.board)
+		np.savez(path, game_state=game.board, score=game.score)

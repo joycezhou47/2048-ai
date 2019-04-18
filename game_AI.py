@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 special_AI = ["Randmie", "LogicRightie"]
+movements = np.array(["U", "D", "L", "R"])
 
 class PLAYER2048():
 	def getPlayer(p_name, game_size=4):
@@ -15,7 +16,10 @@ class PLAYER2048():
 	def respond(self, cur_board):
 		pass
 
-	def endTraining(self):
+	def end_training(self):
+		return
+
+	def take_data(self, game, move):
 		return
 
 
@@ -27,8 +31,11 @@ class AI2048(PLAYER2048):
 	def respond(self, cur_game_state):
 		pass
 
-	def endTraining(self):
+	def end_training(self):
 		self.DM.end_session()
+
+	def take_data(self, game, move):
+		self.DM.append_new_data(game.board, np.where(movements == move))
 
 class Random2048(PLAYER2048):
 	def respond(self, cur_game_state):

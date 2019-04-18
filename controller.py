@@ -22,6 +22,9 @@ class GameController():
 
 	def playGameStep(self, direction):
 		if direction in self.game.available_moves():
+			if not self.AImoving:
+				#Currently a human is taking control, let's teach our AI
+				self.AI.take_data(self.game, direction)
 			self.game = self.game.receive_command(direction)
 			return True
 		return False
@@ -29,19 +32,26 @@ class GameController():
 	def getCurrentGame(self):
 		return self.game
 
+	def curGameFinished(self):
+		return self.game.game_ended()
+
 	def saveGame(self, path):
 		self.cur_game_path = path
 		self.dm_game.save_game(path, self.game)
 
 	def loadGame(self, path):
 		self.cur_game_path = path
-		game_board = self.dm_game.load_game(path)
-		self.game = GameState(board=game_board)
+		game_board, score = self.dm_game.load_game(path)
+		self.game = GameState(board=game_board, score=score)
+		self.setAIMoving(False)
 
 	def endGame(self):
 		if self.cur_game_path:
-			self.save_game(self, self.cur_game_path)
-		self.AI.endTraining()
+			self.dm_game.save_game(self.cur_game_path, self.game)
+		self.AI.end_training()
+
+	def loadAI(self, AI_name):
+		self.AI = PLAYER2048.getPlayer(AI_name, game_size=self.game.game_size)
 
 	def getAIMove(self):
 		return self.AI.respond(self.game)

@@ -4,16 +4,18 @@ GAME_SIZE = 4
 NEW_NUMBER_PROB = [0.8, 0.2]
 
 class GameState():
-	def __init__(self, game_size=GAME_SIZE, board=None):
+	def __init__(self, game_size=GAME_SIZE, board=None, score=0):
 		if board is not None:
 			self.board = board
 			self.game_size = board.shape[0]
+			self.score = score
 		else: 
 			self.board = np.zeros((game_size, game_size),dtype=np.int32)
 			self.game_size = game_size
 			#Drop 2 numbers at beginning
 			self.drop_number_at_random()
 			self.drop_number_at_random()
+			self.score = 0
 
 
 	def drop_number_at_random(self, new_numnber=2):
@@ -35,12 +37,13 @@ class GameState():
 			for j in range(self.game_size-1):
 				if self.board[i, j] == self.board[i,j+1]:
 					self.board[i,j]*=2
+					self.score += self.board[i,j]
 					self.board[i,j+1] = 0
 		self.shift_to_left()
 
 	def receive_command(self,command):
 		#Possible command: U, D, R, L
-		other = GameState(board=self.board)
+		other = GameState(board=self.board, score=self.score)
 		if command == "L":
 			other.shift_to_left()
 			other.merge_towards_left()
@@ -89,6 +92,8 @@ class GameState():
 
 	def getGameBoard(self):
 		return self.board
+	def getScore(self):
+		return self.score
 
 '''
 	illy designed functions
