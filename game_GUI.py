@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter.messagebox import showinfo
 from controller import GameController
 import os
 import time
@@ -89,7 +90,8 @@ class GUI_2048():
 		self.game_board_area.updateGameBoard(self.controller.getCurrentGame().getGameBoard(), self.controller.getCurrentGame().getScore())
 		if self.controller.curGameFinished():
 			self.controller.setAIMoving(False)
-			#TODO: pop up something
+			showinfo("Window", "Game End!")
+
 	
 	def playGameStep(self, direction):
 		if self.controller.playGameStep(direction):
@@ -158,7 +160,7 @@ class GameBoardArea(tk.Canvas):
 
 	def create_widgets(self):
 		self.score = tk.StringVar()
-		self.scoredisplay = tk.Label(self, textvariable=self.score, height=2, width=2)
+		self.scoredisplay = tk.Label(self, textvariable=self.score, height=2, width=4)
 		self.scoredisplay.pack()
 		self.gameboard = tk.Canvas(self, height=20, width=20,bg="black")
 		self.gameboard.pack()
